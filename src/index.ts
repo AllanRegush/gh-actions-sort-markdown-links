@@ -92,11 +92,15 @@ const main = async (filePath: string) => {
     const githubToken = core.getInput('github-token');
     const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
     const result = await main(markdownPath);
-    await readmeBox.updateSection(result ,{
-        owner: githubRepository.split('/')[0],
-        repo: githubRepository.split('/')[1],
-        branch: githubRef.split('/')[2],
-        token: githubToken,
-        section: 'links',
+    try {
+        await readmeBox.updateSection(result ,{
+            owner: githubRepository.split('/')[0],
+            repo: githubRepository.split('/')[1],
+            branch: githubRef.split('/')[2],
+            token: githubToken,
+            section: 'links',
     });
+    } catch (error) {
+        core.setFailed(JSON.stringify(error));
+    }
 })(); 
