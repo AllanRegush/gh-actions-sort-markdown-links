@@ -85,18 +85,13 @@ const main = async (filePath) => {
     const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
     console.log(core.getInput('md-file-path'));
     console.log(markdownPath);
-    try {
-        const result = await main('./README.md');
-        await readme_box_1.ReadmeBox.updateSection(result, {
-            owner: githubRepository.split('/')[0],
-            repo: githubRepository.split('/')[1],
-            branch: githubRef.split('/')[2],
-            token: githubToken,
-            section: 'links',
-        });
-    }
-    catch (error) {
-        core.setFailed(JSON.stringify(error));
-    }
+    const result = await main('./README.md');
+    await readme_box_1.ReadmeBox.updateSection(result, {
+        owner: githubRepository.split('/')[0],
+        repo: githubRepository.split('/')[1],
+        branch: githubRef.split('/')[2],
+        token: githubToken,
+        section: 'links',
+    });
 })();
 //# sourceMappingURL=index.js.map
