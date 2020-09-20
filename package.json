@@ -13,7 +13,7 @@
     "@actions/core": "^1.2.5",
     "@actions/github": "^4.0.0",
     "path": "^0.12.7",
-    "readme-box": "^0.1.2"
+    "readme-box": "git+https://github.com/JasonEtco/readme-box.git"
   },
   "devDependencies": {
     "@types/node": "^14.10.2",
