@@ -91,7 +91,8 @@ const main = async (filePath: string) => {
 
     const githubToken = core.getInput('github-token');
     const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
-
+    console.log(core.getInput('md-file-path'));
+    console.log(markdownPath);
     try {
         const result = await main(markdownPath);
 
