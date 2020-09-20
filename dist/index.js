@@ -82,7 +82,7 @@ const main = async (filePath) => {
         return;
     }
     const githubToken = core.getInput('github-token');
-    const markdownPath = path.join(githubWorkspace, core.getInput('markdown-path'));
+    const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
     try {
         const result = await main(markdownPath);
         await readme_box_1.ReadmeBox.updateSection(result, {
