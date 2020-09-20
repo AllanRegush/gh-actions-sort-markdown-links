@@ -1,82 +1,114 @@
-import { promises as fs, writeFileSync } from 'fs';
-import * as path from 'path';
-// import * as core from '@actions/core';
-// import * as github from '@actions/github';
+import { promises as fs } from 'fs';
 
-async function readMarkdown(fileName: string) {
+import * as path from 'path'; 
+import * as core from '@actions/core';
+//import * as github from '@actions/github';
+import { ReadmeBox as readmeBox } from 'readme-box'; 
+
+async function readMarkdown(filePath: string) {
     try {
-        const filePath = path.resolve(path.join('../', `/${fileName}`));
         return (await fs.readFile(filePath)).toString();
     } catch(e) {
-        console.error(`Could not find filename: ${fileName}`);
+        console.error(`Could not find filename: ${filePath}`);
         return '';
     }
 }
 
-const log = async () => {
-    let read: Array<string> = (await readMarkdown('readme.md')).split('\n');
-    const start = read.indexOf('<!-- Start -->');
+const getLinks = (markdown: Array<string>) => {
+    const start = markdown.indexOf('<!--START_SECTION:links-->');
     const values = [];
-    
-    for(let i = start + 1; i < read.length; ++i) {
-        for(let j = 0; j < read[i].length; ++j) {
+    for(let i = start + 1; i < markdown.length; ++i) {
+        for(let j = 0; j < markdown[i].length; ++j) {
             let name = '';
             let url = '';
-            const char = read[i][j];
+            const char = markdown[i][j];
             switch(char) {
                 case '[':
-                    while(read[i][++j] != ']' && j < read[i].length) {
-                        name += read[i][j];
-                        
+                    while(markdown[i][++j] != ']' && j < markdown[i].length) {
+                        name += markdown[i][j];
+                    
                     }
                 case '(':
                     ++j;
-                    while(read[i][++j] != ')' && j < read[i].length) {
-                        url += read[i][j];
+                    while(markdown[i][++j] != ')' && j < markdown[i].length) {
+                        url += markdown[i][j];
                     }
+                case '<':
+                    break;
             }
             if(name !== '' && url !== '') {
                 values.push({ name, url });
             }
         }
-
     }
-    const sortedValues = values.sort((a, b) => a.name.localeCompare(b.name));
-    
-    const ret = [sortedValues[0]];
-    for (var i = 1; i < sortedValues.length; i++) { //Start loop at 1: arr[0] can never be a duplicate
-      if (sortedValues[i-1].url !== sortedValues[i].url) {
-        ret.push(sortedValues[i]);
-      }
-    }
-
-    const newRead = read.slice(0, start + 1);
-
-    for (const element of ret) {
-        newRead.push(`- [${element.name}](${element.url})`);
-    }
-    writeFileSync("../readme.md", newRead.join("\n"));
+    console.log(values);
+    return values;
 }
 
-log();
+const removeDuplicates = (values: any) => {
+    const ret = [values[0]];
+    for (var i = 1; i < values.length; i++) {
+        if (values[i-1].url !== values[i].url) {
+            ret.push(values[i]);
+        }
+    }
+    return ret;
+}
 
-/* Working on actions
+const createListOfLinks = (list: any) => {
+    const result = [];
+        for (const element of list) {
+        result.push(`- [${element.name}](${element.url})`);
+    }
+    return result;
+}
+
+const main = async (filePath: string) => {
+    const read: Array<string> = (await readMarkdown(filePath)).split('\n');
+    const values = getLinks(read);
+    const sortedValues = values.sort((a, b) => a.name.localeCompare(b.name));
+    const valuesWithNoDuplicates = removeDuplicates(sortedValues);
+    const links = createListOfLinks(valuesWithNoDuplicates);
+    console.log(links.join('\n'));
+    return links.join('\n');
+}
+
+main(path.resolve(path.join('../', `/readme.md`)));
+
 (async () => {
-    // const githubToken = core.getInput('github-token');
+
     const githubWorkspace: string | undefined = process.env.GITHUB_WORKSPACE;
     if(!githubWorkspace) {
         console.error('ERROR: Could not find github workspace');
         return;
     }
-    const filePath = path.join(githubWorkspace, core.getInput('json-file-path'));
-    const columns = core.getInput('columns');
-    const data = fs.readFile(filePath, 'utf8');
-    const json = JSON.parse(data);
+    
+    const githubRepository: string | undefined = process.env.GITHUB_REPOSITORY;
+    if(!githubRepository) {
+        console.error('ERROR: Could not find github repository');
+        return;
+    }
+    
+    const githubRef: string | undefined = process.env.GITHUB_REF;
+    if(!githubRef) {
+        console.error();
+        return;
+    }
+
+    const githubToken = core.getInput('github-token');
+    const markdownPath = path.join(githubWorkspace, core.getInput('markdown-path'));
 
     try {
-        log();
+        const result = await main(markdownPath);
+
+        await readmeBox.updateSection(result ,{
+            owner: githubRepository.split('/')[0],
+            repo: githubRepository.split('/')[1],
+            branch: githubRef.split('/')[2],
+            token: githubToken,
+            section: 'links',
+        });
     } catch (error) {
         core.setFailed(JSON.stringify(error));
     }
-})();
-*/
+})(); 
