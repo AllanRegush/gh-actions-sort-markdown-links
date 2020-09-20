@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { promises as fs, readdirSync } from 'fs';
 import * as path from 'path'; 
 import * as core from '@actions/core';
 import { ReadmeBox as readmeBox } from 'readme-box'; 
@@ -94,7 +94,9 @@ const main = async (filePath: string) => {
     console.log(core.getInput('md-file-path'));
     console.log(markdownPath);
     const result = await main('./README.md');
-
+    readdirSync(markdownPath).forEach(file => {
+        console.log(file);
+    });
     await readmeBox.updateSection(result ,{
         owner: githubRepository.split('/')[0],
         repo: githubRepository.split('/')[1],
