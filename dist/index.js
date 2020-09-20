@@ -14,7 +14,7 @@ async function readMarkdown(filePath) {
     }
 }
 const getLinks = (markdown) => {
-    const start = markdown.indexOf('<!--START_SECTION:links-section-->');
+    const start = markdown.indexOf('<!--START_SECTION:links-->');
     const values = [];
     for (let i = start + 1; i < markdown.length; ++i) {
         for (let j = 0; j < markdown[i].length; ++j) {
@@ -83,18 +83,13 @@ const main = async (filePath) => {
     }
     const githubToken = core.getInput('github-token');
     const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
-    console.log(core.getInput('md-file-path'));
-    console.log(markdownPath);
-    const result = await main('./README.md');
-    fs_1.readdirSync(githubWorkspace).forEach(file => {
-        console.log(file);
-    });
+    const result = await main(markdownPath);
     await readme_box_1.ReadmeBox.updateSection(result, {
         owner: githubRepository.split('/')[0],
         repo: githubRepository.split('/')[1],
         branch: githubRef.split('/')[2],
         token: githubToken,
-        section: 'links-section',
+        section: 'links',
     });
 })();
 //# sourceMappingURL=index.js.map
