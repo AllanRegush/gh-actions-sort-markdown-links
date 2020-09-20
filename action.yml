@@ -7,7 +7,7 @@ inputs:
   md-file-path:
     description: 'markdown file to load'
     required: true
-    default: 'readme.md'
+    default: 'README.md'
   github-token:
     description: 'github token'
     required: true
