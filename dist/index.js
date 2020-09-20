@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const path = require("path");
 const core = require("@actions/core");
-//import * as github from '@actions/github';
 const readme_box_1 = require("readme-box");
 async function readMarkdown(filePath) {
     try {
@@ -40,7 +39,6 @@ const getLinks = (markdown) => {
             }
         }
     }
-    console.log(values);
     return values;
 };
 const removeDuplicates = (values) => {
@@ -65,10 +63,8 @@ const main = async (filePath) => {
     const sortedValues = values.sort((a, b) => a.name.localeCompare(b.name));
     const valuesWithNoDuplicates = removeDuplicates(sortedValues);
     const links = createListOfLinks(valuesWithNoDuplicates);
-    console.log(links.join('\n'));
     return links.join('\n');
 };
-main(path.resolve(path.join('../', `/readme.md`)));
 (async () => {
     const githubWorkspace = process.env.GITHUB_WORKSPACE;
     if (!githubWorkspace) {
