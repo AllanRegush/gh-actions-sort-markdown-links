@@ -90,7 +90,7 @@ const main = async (filePath: string) => {
     }
 
     const githubToken = core.getInput('github-token');
-    const markdownPath = path.join(githubWorkspace, core.getInput('markdown-path'));
+    const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
 
     try {
         const result = await main(markdownPath);
