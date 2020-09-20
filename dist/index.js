@@ -86,7 +86,7 @@ const main = async (filePath) => {
     console.log(core.getInput('md-file-path'));
     console.log(markdownPath);
     const result = await main('./README.md');
-    fs_1.readdirSync(markdownPath).forEach(file => {
+    fs_1.readdirSync(githubWorkspace).forEach(file => {
         console.log(file);
     });
     await readme_box_1.ReadmeBox.updateSection(result, {
