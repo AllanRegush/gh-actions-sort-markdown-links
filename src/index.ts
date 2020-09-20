@@ -1,8 +1,6 @@
 import { promises as fs } from 'fs';
-
 import * as path from 'path'; 
 import * as core from '@actions/core';
-//import * as github from '@actions/github';
 import { ReadmeBox as readmeBox } from 'readme-box'; 
 
 async function readMarkdown(filePath: string) {
@@ -41,7 +39,6 @@ const getLinks = (markdown: Array<string>) => {
             }
         }
     }
-    console.log(values);
     return values;
 }
 
@@ -69,11 +66,8 @@ const main = async (filePath: string) => {
     const sortedValues = values.sort((a, b) => a.name.localeCompare(b.name));
     const valuesWithNoDuplicates = removeDuplicates(sortedValues);
     const links = createListOfLinks(valuesWithNoDuplicates);
-    console.log(links.join('\n'));
     return links.join('\n');
 }
-
-main(path.resolve(path.join('../', `/readme.md`)));
 
 (async () => {
 
