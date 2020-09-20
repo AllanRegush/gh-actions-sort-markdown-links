@@ -14,7 +14,7 @@ async function readMarkdown(filePath) {
     }
 }
 const getLinks = (markdown) => {
-    const start = markdown.indexOf('<!--START_SECTION:links-->');
+    const start = markdown.indexOf('<!--START_SECTION:links-section-->');
     const values = [];
     for (let i = start + 1; i < markdown.length; ++i) {
         for (let j = 0; j < markdown[i].length; ++j) {
@@ -94,7 +94,7 @@ const main = async (filePath) => {
         repo: githubRepository.split('/')[1],
         branch: githubRef.split('/')[2],
         token: githubToken,
-        section: 'links',
+        section: 'links-section',
     });
 })();
 //# sourceMappingURL=index.js.map
