@@ -86,7 +86,7 @@ const main = async (filePath) => {
     console.log(core.getInput('md-file-path'));
     console.log(markdownPath);
     try {
-        const result = await main(markdownPath);
+        const result = await main('./README.md');
         await readme_box_1.ReadmeBox.updateSection(result, {
             owner: githubRepository.split('/')[0],
             repo: githubRepository.split('/')[1],
