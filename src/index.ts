@@ -92,6 +92,7 @@ const main = async (filePath: string) => {
     const githubToken = core.getInput('github-token');
     const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
     const result = await main(markdownPath);
+    console.log(githubRef);
     try {
         await readmeBox.updateSection(result ,{
             owner: githubRepository.split('/')[0],
