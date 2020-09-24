@@ -93,8 +93,8 @@ const main = async (filePath: string) => {
     const markdownPath = path.join(githubWorkspace, core.getInput('md-file-path'));
     const result = await main(markdownPath);
     console.log(githubRef);
-    const tokens = githubRef.split('/').slice(1);
-    const branch = tokens.join('/');
+    const start = githubRef.indexOf('refs/heads/');
+    const branch = githubRef.substring(start, githubRef.length);
     console.log(branch)
     console.log(githubRef.split('/')[2])
     try {
