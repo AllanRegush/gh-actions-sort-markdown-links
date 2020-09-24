@@ -95,6 +95,8 @@ const main = async (filePath: string) => {
     console.log(githubRef);
     const tokens = githubRef.split('/').slice(1);
     const branch = tokens.join('/');
+    console.log(branch)
+    console.log(githubRef.split('/')[2])
     try {
         await readmeBox.updateSection(result ,{
             owner: githubRepository.split('/')[0],
